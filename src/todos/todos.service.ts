@@ -69,4 +69,12 @@ export class TodosService {
         return qb.execute();
     }
 
+    async updateMoreLike(id, numberplusun: number) {
+        await this.todoRepository.update(id, {numberLike:numberplusun})
+    }
+
+
+    async updateMoreDisLike(id, numberplusun: number) {
+        await this.todoRepository.update(id, {numberDisLike:numberplusun})
+    }
 }

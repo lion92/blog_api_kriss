@@ -51,6 +51,22 @@ export class TodosController {
         return 'ok'
     }
 
+    @Put('moreLike/:id')
+    async updateMoreLike(@Param('id') id): Promise<string> {
+        let todo=await this.todos.findOneBy(id)
+        let numberplusun=parseInt(String(todo.numberLike),10)+1;
+        await this.todos.updateMoreLike(id,numberplusun );
+        return 'ok'
+    }
+
+    @Put('moreDislike/:id')
+    async updateMoreDisLike(@Param('id') id): Promise<string> {
+        let todo=await this.todos.findOneBy(id)
+        let numberplusun=parseInt(String(todo.numberLike),10)+1;
+        await this.todos.updateMoreDisLike(id,numberplusun );
+        return 'ok'
+    }
+
     @Post()
     async create(@Body() todo: TodoDTO, @Body() jwt: { jwt: string }) {
         const data = await this.jwtService.verifyAsync(jwt.jwt, {secret: "Je veux pas donner mon mot de passe"});
