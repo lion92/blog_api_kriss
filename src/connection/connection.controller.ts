@@ -17,10 +17,11 @@ export class ConnectionController {
 
     @Post('signup')
     async signup(@Body() user: UserDTO, @Res({passthrough: true}) res: Response) {
-        await this.connectionService
+       let msg= await this.connectionService
             .signup(user, res)
-            .catch((reason) => console.log(reason));
-        return 'ok';
+            .catch((reason) => reason);
+
+       return ""+msg
     }
 
     @Post('/login')

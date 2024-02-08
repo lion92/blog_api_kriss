@@ -24,9 +24,10 @@ export class ConnectionService {
 
 
         res.cookie('jwt', jwt, {httpOnly: true});
-        await this.userRepository
+       let msg= await this.userRepository
             .save(userCreate)
-            .catch((reason) => console.log(reason));
+            .catch((reason) => reason);
+       return ""+msg
     }
 
     async login(

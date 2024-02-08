@@ -13,6 +13,9 @@ export class Todo {
     @Column()
     description: string;
 
+    @Column('bool')
+    isPublish:boolean
+
     @ManyToOne(type => User, user => user.id) user: User;
 
 }

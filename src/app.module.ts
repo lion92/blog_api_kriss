@@ -4,8 +4,6 @@ import {AppService} from './app.service';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {TodosModule} from './todos/todos.module';
 import {ConnectionModule} from './connection/connection.module';
-import {categorieModule} from "./categorie/Categorie.module";
-import {ActionModule} from "./action/Action.module";
 import {JwtModule} from "@nestjs/jwt";
 
 @Module({
@@ -16,7 +14,7 @@ import {JwtModule} from "@nestjs/jwt";
             port: 3306,
             username: 'root',
             password: "",
-            database: 'crud_nest',
+            database: 'blog_api',
             entities: ['src/../**/*.entity.js'],
             synchronize: true,
         }),
@@ -25,9 +23,7 @@ import {JwtModule} from "@nestjs/jwt";
             signOptions: {expiresIn: '1d'}
         }),
         TodosModule,
-        ConnectionModule,
-        categorieModule,
-        ActionModule
+        ConnectionModule
 
     ],
     controllers: [AppController],

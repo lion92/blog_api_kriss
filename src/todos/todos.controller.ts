@@ -10,7 +10,7 @@ export class TodosController {
     }
 
     @Get()
-    async findAll(): Promise<TodosInterface[] | string> {
+    async findAll(): Promise<TodoDTO[] | string> {
         return await this.todos.findAll();
     }
     @Get("/byuser/:user")

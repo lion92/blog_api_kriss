@@ -30,8 +30,14 @@ export class TodosService {
         description: 'test'
     }]
 
-    findAll(): Promise<Todo[]> {
-        return this.todoRepository.find();
+    findAll(): Promise<TodoDTO[]> {
+        let qb=this.todoRepository.createQueryBuilder("tache")
+        qb.select("tache.id as id, user.id as user, description, title, nom, prenom, isPublish")
+        qb.innerJoin("tache.user","user")
+        qb.where({"isPublish":true})
+        console.log(qb.getSql())
+
+        return qb.execute();
     }
 
     async findOneBy(id: number): Promise<Todo | null> {
@@ -53,7 +59,7 @@ export class TodosService {
 
     async findByUser(id)  {
         let qb=this.todoRepository.createQueryBuilder("tache")
-        qb.select("tache.id as id, user.id as user, description, title, nom, prenom")
+        qb.select("tache.id as id, user.id as user, description, title, nom, prenom, isPublish")
         qb.innerJoin("tache.user","user")
         qb.where({user:id})
         console.log(qb.getSql())
