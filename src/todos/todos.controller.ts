@@ -62,7 +62,7 @@ export class TodosController {
     @Put('moreDislike/:id')
     async updateMoreDisLike(@Param('id') id): Promise<string> {
         let todo=await this.todos.findOneBy(id)
-        let numberplusun=parseInt(String(todo.numberLike),10)+1;
+        let numberplusun=parseInt(String(todo.numberDisLike),10)+1;
         await this.todos.updateMoreDisLike(id,numberplusun );
         return 'ok'
     }
