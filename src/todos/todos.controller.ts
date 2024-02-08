@@ -41,6 +41,15 @@ export class TodosController {
         await this.todos.update(id, todo);
         return 'ok'
     }
+    @Put('ispublish/:id')
+    async updatePublish(@Param('id') id, @Body() todo:{jwt:string, isPublish:boolean}, @Body() jwt: { jwt: string }): Promise<string> {
+        const data = await this.jwtService.verifyAsync(jwt.jwt, {secret: "Je veux pas donner mon mot de passe"});
+        if (!data) {
+            throw new UnauthorizedException();
+        }
+        await this.todos.updatePublish(id, todo);
+        return 'ok'
+    }
 
     @Post()
     async create(@Body() todo: TodoDTO, @Body() jwt: { jwt: string }) {

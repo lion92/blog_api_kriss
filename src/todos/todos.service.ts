@@ -56,6 +56,9 @@ export class TodosService {
     async update(id: number, todo: TodoDTO) {
         await this.todoRepository.update(id, {title:todo.title,description:todo.description, user:todo.user})
     }
+    async updatePublish(id: number, todo: {jwt:string, isPublish:boolean}) {
+        await this.todoRepository.update(id, {isPublish:todo.isPublish})
+    }
 
     async findByUser(id)  {
         let qb=this.todoRepository.createQueryBuilder("tache")
