@@ -16,6 +16,12 @@ export class Todo {
     @Column('bool')
     isPublish:boolean
 
+    @Column()
+    numberLike:number
+
+    @Column()
+    numberDisLike:number
+
     @ManyToOne(type => User, user => user.id) user: User;
 
 }

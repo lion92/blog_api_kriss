@@ -5,6 +5,8 @@ export class TodoDTO{
     readonly description:string
     readonly user:User
     readonly isPublish:boolean
+    readonly numberLike:number
+    readonly numberDisLike:number
     jwt?: string
 
 }
