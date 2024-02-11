@@ -114,11 +114,6 @@ export class TodosController {
     await this.todos.create(todo);
   }
 
-  @Get('pictures/:filename')
-  async getPicture({ fileName, res }: { fileName: any; res: e.Response }) {
-    res.sendFile(fileName, { root: './uploads' });
-  }
-
   @Post('upload')
   @UseInterceptors(
     FileInterceptor('file', {
