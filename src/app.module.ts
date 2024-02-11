@@ -6,11 +6,17 @@ import { TodosModule } from './todos/todos.module';
 import { ConnectionModule } from './connection/connection.module';
 import { JwtModule } from '@nestjs/jwt';
 import { MulterModule } from '@nestjs/platform-express';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
+import { join } from 'path';
 @Module({
   imports: [
     MulterModule.register({
       dest: './uploads',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads/',
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
