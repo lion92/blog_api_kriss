@@ -63,6 +63,7 @@ export class TodosService {
     await this.todoRepository.update(id, {
       title: todo.title,
       description: todo.description,
+      pictureName: todo.pictureName,
       user: todo.user,
     });
   }
