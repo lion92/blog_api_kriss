@@ -104,6 +104,7 @@ export class TodosController {
 
   @Post()
   async create(@Body() todo: TodoDTO, @Body() jwt: { jwt: string }) {
+    console.log(todo);
     const data = await this.jwtService.verifyAsync(jwt.jwt, {
       secret: 'Je veux pas donner mon mot de passe',
     });

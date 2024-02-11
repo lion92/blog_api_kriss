@@ -1,27 +1,28 @@
-
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne} from 'typeorm';
-import {User} from "./User.entity";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { User } from './User.entity';
 
 @Entity()
 export class Todo {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    title: string;
+  @Column()
+  title: string;
 
-    @Column()
-    description: string;
+  @Column()
+  description: string;
 
-    @Column('bool')
-    isPublish:boolean
+  @Column()
+  pictureName: string;
 
-    @Column()
-    numberLike:number
+  @Column('bool')
+  isPublish: boolean;
 
-    @Column()
-    numberDisLike:number
+  @Column()
+  numberLike: number;
 
-    @ManyToOne(type => User, user => user.id) user: User;
+  @Column()
+  numberDisLike: number;
 
+  @ManyToOne((type) => User, (user) => user.id) user: User;
 }
