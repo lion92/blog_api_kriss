@@ -15,7 +15,6 @@ import { TodoDTO } from '../dto/todoDTO';
 import { JwtService } from '@nestjs/jwt';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import e from 'express';
 
 @Controller('todos')
 export class TodosController {
@@ -27,6 +26,11 @@ export class TodosController {
   @Get()
   async findAll(): Promise<TodoDTO[] | string> {
     return await this.todos.findAll();
+  }
+
+  @Get('isConfirm')
+  async findAllPublish(): Promise<TodoDTO[] | string> {
+    return await this.todos.findAllPublish();
   }
 
   @Get('/byuser/:user')
@@ -83,6 +87,21 @@ export class TodosController {
       throw new UnauthorizedException();
     }
     await this.todos.updatePublish(id, todo);
+    return 'ok';
+  }
+  @Put('ispublishconfirm/:id')
+  async updatePublishConfirm(
+    @Param('id') id,
+    @Body() todo: { jwt: string; confirmPublish: boolean },
+    @Body() jwt: { jwt: string },
+  ): Promise<string> {
+    const data = await this.jwtService.verifyAsync(jwt.jwt, {
+      secret: 'Je veux pas donner mon mot de passe',
+    });
+    if (!data) {
+      throw new UnauthorizedException();
+    }
+    await this.todos.updatePublishConfirme(id, todo);
     return 'ok';
   }
 

@@ -9,6 +9,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { join } from 'path';
+import { ValidationArticlesModule } from './validation-articles/validation-articles.module';
+
 @Module({
   imports: [
     MulterModule.register({
@@ -34,6 +36,7 @@ import { join } from 'path';
     }),
     TodosModule,
     ConnectionModule,
+    ValidationArticlesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

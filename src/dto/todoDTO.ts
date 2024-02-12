@@ -8,5 +8,6 @@ export class TodoDTO {
   readonly numberLike: number;
   readonly numberDisLike: number;
   pictureName: string;
+  confirmPublish: boolean;
   jwt?: string;
 }

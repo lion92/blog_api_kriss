@@ -37,10 +37,22 @@ export class TodosService {
   findAll(): Promise<TodoDTO[]> {
     const qb = this.todoRepository.createQueryBuilder('tache');
     qb.select(
-      'tache.id as id, user.id as user, description, title, nom, prenom, isPublish, numberLike,numberDisLike, pictureName',
+      'tache.id as id, user.id as user, description, title, nom, prenom, isPublish, numberLike,numberDisLike, pictureName, confirmPublish',
     );
     qb.innerJoin('tache.user', 'user');
     qb.where({ isPublish: true });
+    console.log(qb.getSql());
+
+    return qb.execute();
+  }
+
+  findAllPublish(): Promise<TodoDTO[]> {
+    const qb = this.todoRepository.createQueryBuilder('tache');
+    qb.select(
+      'tache.id as id, user.id as user, description, title, nom, prenom, isPublish, numberLike,numberDisLike, pictureName, confirmPublish',
+    );
+    qb.innerJoin('tache.user', 'user');
+    qb.where({ isPublish: true, confirmPublish: 1 });
     console.log(qb.getSql());
 
     return qb.execute();
@@ -67,14 +79,25 @@ export class TodosService {
       user: todo.user,
     });
   }
+
   async updatePublish(id: number, todo: { jwt: string; isPublish: boolean }) {
     await this.todoRepository.update(id, { isPublish: todo.isPublish });
+  }
+
+  async updatePublishConfirme(
+    id: number,
+    todo: { jwt: string; confirmPublish: boolean },
+  ) {
+    console.log(todo.confirmPublish);
+    await this.todoRepository.update(id, {
+      confirmPublish: todo.confirmPublish,
+    });
   }
 
   async findByUser(id) {
     const qb = this.todoRepository.createQueryBuilder('tache');
     qb.select(
-      'tache.id as id, user.id as user, description, title, nom, prenom, isPublish, numberLike,numberDisLike, pictureName',
+      'tache.id as id, user.id as user, description, title, nom, prenom, isPublish, numberLike,numberDisLike, pictureName, confirmPublish',
     );
     qb.innerJoin('tache.user', 'user');
     qb.where({ user: id });

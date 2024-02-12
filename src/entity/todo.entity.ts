@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './User.entity';
 
 @Entity()
@@ -23,6 +23,9 @@ export class Todo {
 
   @Column()
   numberDisLike: number;
+
+  @Column('bool', { default: false })
+  confirmPublish: boolean;
 
   @ManyToOne((type) => User, (user) => user.id) user: User;
 }
