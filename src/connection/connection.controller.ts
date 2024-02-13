@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   Post,
   Put,
@@ -14,6 +15,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
 import { User } from '../entity/User.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TodoDTO } from '../dto/todoDTO';
+import { LoginDTO } from '../dto/LoginDTO';
 
 @Controller('connection')
 export class ConnectionController {
@@ -23,6 +26,11 @@ export class ConnectionController {
     private readonly connectionService: ConnectionService,
     private jwtService: JwtService,
   ) {}
+
+  @Get()
+  async findAll(): Promise<TodoDTO[] | string> {
+    return await this.connectionService.findAll();
+  }
 
   @Post('signup')
   async signup(
@@ -38,7 +46,7 @@ export class ConnectionController {
 
   @Post('/login')
   async login(
-    @Body() user: UserDTO,
+    @Body() user: LoginDTO,
     @Res({ passthrough: true }) res: Response,
   ): Promise<void | {
     id: number;

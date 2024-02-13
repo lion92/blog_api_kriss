@@ -10,6 +10,7 @@ import { User } from '../entity/User.entity';
 import { compare, hash } from 'bcrypt';
 import { LoginDTO } from '../dto/LoginDTO';
 import { JwtService } from '@nestjs/jwt';
+import { TodoDTO } from '../dto/todoDTO';
 
 @Injectable()
 export class ConnectionService {
@@ -35,16 +36,7 @@ export class ConnectionService {
     return '' + msg;
   }
 
-  async login(
-    user: LoginDTO,
-    res,
-  ): Promise<{
-    id: number;
-    email: string;
-    prenom: string;
-    nom: string;
-    jwt: string;
-  }> {
+  async login(user: LoginDTO, res): Promise<UserDTO> {
     const { password, email } = user;
     const userFind = await this.userRepository.findOneBy({ email: email });
     if (!userFind) {
@@ -75,6 +67,15 @@ export class ConnectionService {
     await this.userRepository.update(id, {
       nom: userDTO.nom,
       prenom: userDTO.prenom,
+      role: userDTO.role,
     });
+  }
+
+  findAll(): Promise<TodoDTO[]> {
+    const qb = this.userRepository.createQueryBuilder('user');
+    qb.select('id, nom, prenom, email, role');
+    console.log(qb.getSql());
+
+    return qb.execute();
   }
 }

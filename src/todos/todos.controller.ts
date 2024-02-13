@@ -15,12 +15,17 @@ import { TodoDTO } from '../dto/todoDTO';
 import { JwtService } from '@nestjs/jwt';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../entity/User.entity';
+import { Repository } from 'typeorm';
 
 @Controller('todos')
 export class TodosController {
   constructor(
     private readonly todos: TodosService,
     private jwtService: JwtService,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   @Get()
@@ -89,6 +94,7 @@ export class TodosController {
     await this.todos.updatePublish(id, todo);
     return 'ok';
   }
+
   @Put('ispublishconfirm/:id')
   async updatePublishConfirm(
     @Param('id') id,
@@ -100,6 +106,14 @@ export class TodosController {
     });
     if (!data) {
       throw new UnauthorizedException();
+    }
+    console.log(data);
+    const userinfo = await this.userRepository.findOne({
+      where: { id: data.id },
+    });
+    console.log(userinfo);
+    if (userinfo?.role != 'admin') {
+      return 'pas le role admin';
     }
     await this.todos.updatePublishConfirme(id, todo);
     return 'ok';
