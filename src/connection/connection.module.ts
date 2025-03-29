@@ -11,4 +11,5 @@ import { Repository } from 'typeorm';
   controllers: [ConnectionController],
   providers: [Repository, ConnectionService, JwtService],
 })
-export class ConnectionModule {}
+export class ConnectionModule {
+}

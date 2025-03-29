@@ -49,14 +49,14 @@ dotenv.config();
       }),
     }),
 
-    // Configuration JWT avec accès au service de configuration
+    // Configuration JWT avec accès au service de configuration - CORRIGÉ
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const secret = configService.get('JWT_SECRET');
+        const secret = configService.get('secret');
         if (!secret) {
-          console.warn('JWT_SECRET non défini! Utilisation d\'une valeur par défaut (non sécurisée).');
+          console.warn('Variable "secret" non définie! Utilisation d\'une valeur par défaut (non sécurisée).');
         }
         return {
           secret: secret || 'defaultSecretKeyNotSecure',
@@ -75,8 +75,11 @@ dotenv.config();
 })
 export class AppModule {
   constructor(private configService: ConfigService) {
-    // Vérification de la configuration au démarrage
-    const jwtSecret = this.configService.get('JWT_SECRET');
-
+    // Vérification de la configuration au démarrage - CORRIGÉ
+    const jwtSecret = this.configService.get('secret');
+    if (!jwtSecret) {
+      console.warn('AVERTISSEMENT: La variable "secret" n\'est pas définie dans les variables d\'environnement.');
+      console.warn('Veuillez ajouter secret=votre_cle_secrete dans votre fichier .env');
+    }
   }
 }

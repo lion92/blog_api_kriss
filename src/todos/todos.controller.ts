@@ -18,6 +18,7 @@ import { diskStorage } from 'multer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entity/User.entity';
 import { Repository } from 'typeorm';
+import * as process from "process";
 
 @Controller('todos')
 export class TodosController {
@@ -54,7 +55,7 @@ export class TodosController {
   @Delete(':id')
   async remove(@Param('id') id, @Body() jwt: { jwt: string }): Promise<string> {
     const data = await this.jwtService.verifyAsync(jwt.jwt, {
-      secret: 'Je veux pas donner mon mot de passe',
+      secret: process.env.secret,
     });
     if (!data) {
       throw new UnauthorizedException();
@@ -70,7 +71,7 @@ export class TodosController {
     @Body() jwt: { jwt: string },
   ): Promise<string> {
     const data = await this.jwtService.verifyAsync(jwt.jwt, {
-      secret: 'Je veux pas donner mon mot de passe',
+      secret: process.env.secret,
     });
     if (!data) {
       throw new UnauthorizedException();
@@ -86,7 +87,7 @@ export class TodosController {
     @Body() jwt: { jwt: string },
   ): Promise<string> {
     const data = await this.jwtService.verifyAsync(jwt.jwt, {
-      secret: 'Je veux pas donner mon mot de passe',
+      secret: process.env.secret,
     });
     if (!data) {
       throw new UnauthorizedException();
@@ -102,7 +103,7 @@ export class TodosController {
     @Body() jwt: { jwt: string },
   ): Promise<string> {
     const data = await this.jwtService.verifyAsync(jwt.jwt, {
-      secret: 'Je veux pas donner mon mot de passe',
+      secret: process.env.secret,
     });
     if (!data) {
       throw new UnauthorizedException();
@@ -139,7 +140,7 @@ export class TodosController {
   async create(@Body() todo: TodoDTO, @Body() jwt: { jwt: string }) {
     console.log(todo);
     const data = await this.jwtService.verifyAsync(jwt.jwt, {
-      secret: 'Je veux pas donner mon mot de passe',
+      secret: process.env.secret,
     });
     if (!data) {
       throw new UnauthorizedException();
