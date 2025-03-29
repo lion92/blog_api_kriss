@@ -7,33 +7,65 @@ import { ConnectionModule } from './connection/connection.module';
 import { JwtModule } from '@nestjs/jwt';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
-
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { ValidationArticlesModule } from './validation-articles/validation-articles.module';
+import * as dotenv from 'dotenv';
+
+// Chargement des variables d'environnement
+dotenv.config();
 
 @Module({
   imports: [
+    // Configuration globale des variables d'environnement
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+
+    // Configuration de Multer pour les uploads
     MulterModule.register({
       dest: './uploads',
     }),
+
+    // Servir les fichiers statiques
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads/',
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'blog_api',
-      entities: ['src/../**/*.entity.js'],
-      synchronize: true,
+
+    // Configuration de TypeORM avec accès au service de configuration
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get('DB_HOST', 'localhost'),
+        port: configService.get('DB_PORT', 3306),
+        username: configService.get('DB_USERNAME', 'root'),
+        password: configService.get('DB_PASSWORD', ''),
+        database: configService.get('DB_NAME', 'blog_api'),
+        entities: [join(__dirname, '**', '*.entity.{ts,js}')],
+        synchronize: configService.get('DB_SYNC', true),
+      }),
     }),
-    JwtModule.register({
-      secret: process.env.secret,
-      signOptions: { expiresIn: '1d' },
+
+    // Configuration JWT avec accès au service de configuration
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const secret = configService.get('JWT_SECRET');
+        if (!secret) {
+          console.warn('JWT_SECRET non défini! Utilisation d\'une valeur par défaut (non sécurisée).');
+        }
+        return {
+          secret: secret || 'defaultSecretKeyNotSecure',
+          signOptions: { expiresIn: configService.get('JWT_EXPIRES', '1d') },
+        };
+      },
     }),
+
+    // Modules de l'application
     TodosModule,
     ConnectionModule,
     ValidationArticlesModule,
@@ -42,6 +74,9 @@ import { ValidationArticlesModule } from './validation-articles/validation-artic
   providers: [AppService],
 })
 export class AppModule {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
+  constructor(private configService: ConfigService) {
+    // Vérification de la configuration au démarrage
+    const jwtSecret = this.configService.get('JWT_SECRET');
+
+  }
 }
